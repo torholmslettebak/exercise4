@@ -35,23 +35,42 @@ double sumVector(Vector vec)
 {
 	double sum = 0;
 	#pragma omp parallel for schedule(static) reduction(+:sum)
-	for (long unsigned int i = 0; i < vec -> len; i++)
+	for (unsigned int i = 0; i < vec -> len; i++)
 	{
 		// printf("Hai, i'm thread number %d and I am working on i %d\n", omp_get_thread_num(), i);
 		sum += vec -> data[i];
 	}
 	return sum;
 }
+
+// int pow2(int base, int exponent)
+// {
+// 	int result = (int) pow((double) base, 3);
+// 	return result;
+// }
+
 int main(void)
 {
-	double sum, t1, t2;
-	int length = (int) pow(2, 14);
-	Vector vec = generateVector(length);
-	sum = sumVector(vec);
+	double sum, t1, t2, dt;
+	double actualSum = M_PI*M_PI/6;
+	// unsigned int length = (int) pow(2, 14);
+	t1 = WallTime();
+	for (int k = 3; k < 14; k++)
+	{
+		// length = (unsigned int) pow(2, (double) k);
+		int length = pow(2.0, 1.0*k);
+		Vector vec = generateVector(length);
+		
+		sum = sumVector(vec);
+		printf("The computed sum for sum: %.13lf\n", sum);
+		printf("The sum as number of elements goes -> inf: %.13lf\n", actualSum);
+
+		printf("The difference S - Sn for n = 2^k for k = 3, .. ,14: %lf\n", actualSum - sum);
+			
+	}
+	t2 = WallTime();
 	//printVector2(length, vec);
-	printf("The sum: %.13lf\n", sum);
-	printf("The sum as number of elements -> inf: %.13lf\n", M_PI*M_PI/6);
-	printf("Number of threads %d\n", omp_get_max_threads());
+printf("Time elapsed summing vectors: %lf \n", t2-t1);
 	return 0;
 }
 //1.6448340718481
