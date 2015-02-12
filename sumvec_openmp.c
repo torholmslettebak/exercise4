@@ -34,21 +34,24 @@ void printVector2(int length, Vector vec)
 double sumVector(Vector vec)
 {
 	double sum = 0;
+	#pragma omp parallel for schedule(static)
 	for (int i = 0; i < vec -> len; i++)
 	{
+		// printf("Hai, i'm thread number %d and I am working on i %d\n", omp_get_thread_num(), i);
 		sum += vec -> data[i];
 	}
 	return sum;
 }
 int main(void)
 {
-	double sum;
-	int length = 10000;
+	double sum, t1, t2;
+	int length = pow(2, 8);
 	Vector vec = generateVector(length);
 	sum = sumVector(vec);
 	//printVector2(length, vec);
 	printf("The sum: %.13lf\n", sum);
 	printf("The sum as number of elements -> inf: %.13lf\n", M_PI*M_PI/6);
+	printf("Number of threads %d\n", omp_get_max_threads());
 	return 0;
 }
 //1.6448340718481

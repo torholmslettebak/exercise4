@@ -36,7 +36,7 @@ double sumVector(Vector vec)
 int main(void)
 {
 	double sum;
-	int length = 10000;
+	int length = pow(2, 8);
 	Vector vec = generateVector(length);
 	sum = sumVector(vec);
 	//printVector2(length, vec);
