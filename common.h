@@ -1,7 +1,7 @@
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef COMMON_H_
+#define COMMON_H_
 
-#ifdef HAVE_MPI
+/*#ifdef HAVE_MPI
 #include <mpi.h>
 extern MPI_Comm WorldComm;
 extern MPI_Comm SelfComm;
@@ -10,12 +10,12 @@ extern MPI_Comm SelfComm;
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif
-
+*/
 // Value of pi
-#define M_PI            3.14159265358979323846
+//#define M_PI            3.14159265358979323846
 
 // A structure describing a vector
-typedef struc 
+typedef struct 
 {
 	double* data;	// Array with data
 	int len;        // The local length of the vector

@@ -54,10 +54,11 @@ double WallTime ()
 #endif
 }
 
-void copyVector(Vector y, const Vector x)
+/*void copyVector(Vector y, const Vector x)
 {
   dcopy(&y->len, x->data, &x->stride, y->data, &y->stride);
 }
+*/
 
 void fillVector(Vector x, double alpha)
 {
