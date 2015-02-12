@@ -10,7 +10,7 @@ INCLUDE(CheckCCompilerFlag)
 CHECK_C_COMPILER_FLAG("-std=c99" HAVE_C99)
 
 IF (HAVE_C99)
-  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -lm -lfunc")
+  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 ")
 
 
 ELSE(HAVE_C99)
@@ -23,10 +23,14 @@ if (OPENMP_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS} -fopenmp")
 endif()
 
+
+
 add_library(common common.c)
 add_executable(gensumserial genSumVec.c)
 target_link_libraries(gensumserial common)
 add_executable(sumvec_openmp sumvec_openmp.c)
+find_library(M_LIB m)
+target_link_libraries(sumvec_openmp ${M_LIB})
 target_link_libraries(sumvec_openmp common)
 enable_testing()
 
