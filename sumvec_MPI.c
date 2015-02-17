@@ -22,12 +22,8 @@ double sumVector(Vector vec, int length)
 	double sum = 0;
 	for (int i = 0; i < length; i++)
 	{
-		sum += vec -> data[i];
-		// printf("I am process: %d\n", myid);
-		// printf("Out of: %d\n", nproc);
-		
+		sum += vec -> data[i];	
 	}
-	// freeVector(vec);
 	return sum;
 }
 
@@ -37,6 +33,7 @@ double difference(double sum)
 	return actualSum - sum;
 }
 
+// used for testing
 void printVector2(int length, Vector vec)
 {
 	printf("Here comes the vector: \n");
@@ -46,15 +43,7 @@ void printVector2(int length, Vector vec)
 	}
 	printf("\n");
 }
-void printVector3(int length, double* arr)
-{
-	printf("Here comes the vector: \n");
-	for (int i = 0; i < length; i++)
-	{
-		printf(" %lf ", arr[i]);
-	}
-	printf("\n");
-}
+
 
 int isPowerOfTwo(int x)
 {
@@ -96,25 +85,17 @@ int main(int argc, char **argv)
 		if (myid == 0) // If I am root, generate vector
 		{
 			vec = generateVector(length);
-			//printVector2(length, vec);
 		}
-		// MPI_Barrier(MPI_COMM_WORLD);
-	//	MPI_Scatter(vec -> data, elements_per_proc, MPI_DOUBLE, sub_rand_nums, elements_per_proc, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 		MPI_Scatter(vec -> data, elements_per_proc, MPI_DOUBLE, recVec -> data, elements_per_proc, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 		
 		double local_sum = sumVector(recVec, elements_per_proc);
-		// freeVector(recVec);
 
-		// MPI_Barrier(MPI_COMM_WORLD);
 		MPI_Gather(&local_sum, 1, MPI_DOUBLE, result -> data, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
 		if(myid == 0)
 		{
 			global_sum = sumVector(result, nproc);
 			printf("The global_sum: %lf\n", global_sum);
-			//double error = (double) ((M_PI * M_PI / 6) - global_sum);
-			//printf("The error for 2^k (k = %d) = %d,  elements is error = %lf\n", k,length, error);
-
 		}
 		if(myid == 0)
 		{
