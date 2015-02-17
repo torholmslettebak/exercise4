@@ -1,7 +1,7 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
-/*#ifdef HAVE_MPI
+#ifdef HAVE_MPI
 #include <mpi.h>
 extern MPI_Comm WorldComm;
 extern MPI_Comm SelfComm;
@@ -10,9 +10,9 @@ extern MPI_Comm SelfComm;
 #ifdef HAVE_OPENMP
 #include <omp.h>
 #endif
-*/
+
 // Value of pi
-//#define M_PI            3.14159265358979323846
+#define M_PI            3.14159265358979323846
 
 // A structure describing a vector
 typedef struct 
@@ -21,6 +21,13 @@ typedef struct
 	int len;        // The local length of the vector
 	int glob_len;   // The global length of the vector
 	int stride;     // The distance in memory between vector elements
+	#ifdef HAVE_MPI
+		MPI_Comm* comm; //!< The MPI communicator the vector is split across
+	#endif
+	  int comm_size;  //!< The size of the MPI communicator the vector is split across
+	  int comm_rank;  //!< The rank of this process within the communicator the vector is split across
+	  int* displ;     //!< Displacements for parallel vectors
+	  int* sizes;     //!< The size of each process for parallel vectors
 }
 vector_t;
 
@@ -61,4 +68,11 @@ int getCurrentThread();
 //! \brief Get current wall-clock time
 //! \return The current wall time in seconds
 double WallTime();
+
+//! \brief Calculate a parallel splitting of a vector
+//! \param globLen The global length of the vector
+//! \param size The number of processes to divide vector across
+//! \param[out] len The length on each of the processes
+//! \param[out] The displacement for each of the processes
+void splitVector(int globLen, int size, int** len, int** displ);
 #endif

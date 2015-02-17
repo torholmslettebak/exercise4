@@ -56,6 +56,7 @@ double sumVector(Vector vec, int length)
 	{
 		sum += vec -> data[i]; 
 	}
+	freeVector(vec);
 	return sum;
 }
 
@@ -65,21 +66,63 @@ double difference(double sum)
 	return actualSum - sum;
 }
 
+void printVector2(int length, Vector vec)
+{
+	printf("Here comes the vector: \n");
+	for (int i = 0; i < length; i++)
+	{
+		printf(" %lf ", vec -> data[i]);
+	}
+	printf("\n");
+}
+
 int main(int argc, char **argv)
 {
-	int rank, size, tag, i;
+	int rank, size, tag, i, ierr;
 	int length, myid, nproc;
+	MPI_Status status;
+	double sumfinal;
 	MPI_Init (&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &nproc);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myid);
+	printf("I am process: %d\n", myid);
+	printf("Out of: %d\n", nproc);
+	// if (nproc % 2 != 0)
+	// {
+	// 	printf("The number of processes must be even\n");
+	// 	#ifdef HAVE_MPI
+	// 		MPI_Finalize();
+	// 	#endif
+	// 	return 1;
+	// }
 
-	for (int k = 3; k < 15; k++)
+	for (int k = 3; k < 4; k++)
 	{
+
 		double t1, t2, dt, sum;
 		t1 = WallTime();
 		length = (int) pow(2, k);
-		Vector vec = generateVector(length);
-		sum = sumVector(vec, length);
+		Vector vec;
+		int *len;
+		int *startIndex;
+		if (myid == 0)
+		{
+			splitVector(length, nproc, &len, &startIndex);
+			vec = generateVector(length);
+			MPI_Bcast(&vec, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+						// MPI_Send(message, 13, MPI_CHAR, i, tag, MPI_COMM_WORLD);
+		}
+		else
+		{
+			printf("I am process: %d\n", myid);
+			printf("Out of: %d\n", nproc);
+			printVector2(length, vec);
+			// need to sum all the sums ffrom all processes
+			sum = sumVector(vec, length);
+		}
+		MPI_Reduce(&sum, &sumfinal, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+
+		// a barrier for master thread to wait for result
 		double error = difference(sum);
 		printf("The error for 2^k (k = %d) = %d,  elements is error = %lf\n", k,length, error);
 		t2 = WallTime();
@@ -87,4 +130,7 @@ int main(int argc, char **argv)
 		printf("The time elapsed for 2^k (k = %d) = %d elements: dt = %lf\n", k, length, dt);
 
 	}
+
+	MPI_Finalize();
+	return 0;
 }

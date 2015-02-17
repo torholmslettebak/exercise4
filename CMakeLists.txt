@@ -12,7 +12,6 @@ CHECK_C_COMPILER_FLAG("-std=c99" HAVE_C99)
 IF (HAVE_C99)
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 ")
 
-
 ELSE(HAVE_C99)
   MESSAGE(WARNING "C99 support not available, program may fail to compile!")
 ENDIF(HAVE_C99)
@@ -20,7 +19,19 @@ ENDIF(HAVE_C99)
 find_package(MPI REQUIRED)
 OPTION(USE_OPENMP "Use OpenMP?" ON)
 OPTION(USE_MPI "Use MPI?" ON)
-include_directories(${MPI_C_INCLUDE_PATH})
+
+IF(USE_OPENMP)
+  FIND_PACKAGE(OpenMP)
+ENDIF(USE_OPENMP)
+IF(USE_MPI)
+  FIND_PACKAGE(MPI)
+ENDIF(USE_MPI)
+
+
+include_directories( ${MPI_C_INCLUDE_PATH})
+if (MPI_FOUND)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${MPI_C_FLAGS}")
+endif()
 find_package(OpenMP)
 if (OPENMP_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS} -fopenmp")
@@ -42,4 +53,7 @@ target_link_libraries(sumvec_MPI ${M_LIB})
 enable_testing()
 
 add_test(gensumserial ${PROJECT_BINARY_DIR}/gensumserial)
-#set_tests_properties(gensumserial PROPERTIES ENVIRONMENT OMP_NUM_THREADS=2)
+
+add_test(sumvec_openmp ${PROJECT_BINARY_DIR}/sumvec_openmp)
+add_test(sumvec_MPI ${PROJECT_BINARY_DIR}/sumvec_MPI)
+set_tests_properties(gensumserial PROPERTIES ENVIRONMENT OMP_NUM_THREADS=2)

@@ -43,7 +43,7 @@ int main(void)
 	t2 = WallTime();
 	//printVector2(length, vec);
 	printf("The sum: %.13lf calculated in: , with serial computation. %lf\n", sum, t2-t1);
-	printf("The sum as number of elements -> inf: %.13lf\n", M_PI*M_PI/6);
+	printf("The sum as number of elements -> inf: %.13lf\n", M_PI * M_PI/6);
 	return 0;
 }
 //1.6448340718481
