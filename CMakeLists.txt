@@ -56,4 +56,4 @@ add_test(gensumserial ${PROJECT_BINARY_DIR}/gensumserial)
 
 add_test(sumvec_openmp ${PROJECT_BINARY_DIR}/sumvec_openmp)
 add_test(sumvec_MPI ${PROJECT_BINARY_DIR}/sumvec_MPI)
-set_tests_properties(gensumserial PROPERTIES ENVIRONMENT OMP_NUM_THREADS=2)
+set_tests_properties(sumvec_openmp PROPERTIES ENVIRONMENT OMP_NUM_THREADS=2)

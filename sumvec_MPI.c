@@ -54,9 +54,12 @@ double sumVector(Vector vec, int length)
 	double sum = 0;
 	for (int i = 0; i < length; i++)
 	{
-		sum += vec -> data[i]; 
+		sum += vec -> data[i];
+		// printf("I am process: %d\n", myid);
+		// printf("Out of: %d\n", nproc);
+		
 	}
-	freeVector(vec);
+	// freeVector(vec);
 	return sum;
 }
 
@@ -75,6 +78,25 @@ void printVector2(int length, Vector vec)
 	}
 	printf("\n");
 }
+void printVector3(int length, double* arr)
+{
+	printf("Here comes the vector: \n");
+	for (int i = 0; i < length; i++)
+	{
+		printf(" %lf ", arr[i]);
+	}
+	printf("\n");
+}
+
+int isPowerOfTwo(int x)
+{
+	if ((x%2 == 0) && x>1)
+	{
+		return 1;
+	}
+	else 
+		return 0;
+}
 
 int main(int argc, char **argv)
 {
@@ -82,55 +104,72 @@ int main(int argc, char **argv)
 	int length, myid, nproc;
 	MPI_Status status;
 	double sumfinal;
+	// From this point on every process executes a seperate copy of the program
 	MPI_Init (&argc, &argv);
+	int root = 0;
 	MPI_Comm_size(MPI_COMM_WORLD, &nproc);
 	MPI_Comm_rank(MPI_COMM_WORLD, &myid);
-	printf("I am process: %d\n", myid);
-	printf("Out of: %d\n", nproc);
-	// if (nproc % 2 != 0)
-	// {
-	// 	printf("The number of processes must be even\n");
-	// 	#ifdef HAVE_MPI
-	// 		MPI_Finalize();
-	// 	#endif
-	// 	return 1;
-	// }
-
-	for (int k = 3; k < 4; k++)
+	// printf("I am process: %d\n", myid);
+	// printf("Out of: %d\n", nproc);
+	if (isPowerOfTwo(nproc) != 1)
 	{
+		printf("The number of processes must be a power of two.\n");
+		#ifdef HAVE_MPI
+			MPI_Finalize();
+		#endif
+		return 1;
+	}
 
-		double t1, t2, dt, sum;
+	for (int k = 3; k < 6; k++)
+	{
+		double t1, t2, dt;
 		t1 = WallTime();
 		length = (int) pow(2, k);
 		Vector vec;
-		int *len;
-		int *startIndex;
+		int elements_per_proc = length/nproc;
+		Vector result = createVector(nproc);
+		Vector recVec = createVector(elements_per_proc);
+		if (myid == 0) // If I am root, generate vector
+		{
+			result = createVector(length);
+			vec = generateVector(length);
+			printVector2(length, vec);
+		}
+		// MPI_Barrier(MPI_COMM_WORLD);
+	//	MPI_Scatter(vec -> data, elements_per_proc, MPI_DOUBLE, sub_rand_nums, elements_per_proc, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+		MPI_Scatter(vec -> data, elements_per_proc, MPI_DOUBLE, recVec -> data, elements_per_proc, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+		
+		// printf("I am process: %d\n", myid);
+		// printf("Out of: %d\n", nproc);
+		double local_sum = sumVector(recVec, elements_per_proc);
+		// printf("The local sum: %lf\n", local_sum);
+		// printf("The recVec\n");
+	//	printVector2(elements_per_proc, recVec);
+		MPI_Barrier(MPI_COMM_WORLD);
+		MPI_Gather(&local_sum, 1, MPI_DOUBLE, result -> data, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+		MPI_Barrier(MPI_COMM_WORLD);
 		if (myid == 0)
 		{
-			splitVector(length, nproc, &len, &startIndex);
-			vec = generateVector(length);
-			MPI_Bcast(&vec, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-						// MPI_Send(message, 13, MPI_CHAR, i, tag, MPI_COMM_WORLD);
+			printf("The resultvector: %d\n", nproc);
+			printVector2(nproc, result);
+			//double global_sum;
+			double global_sum = sumVector(result, nproc);
+			printf("The global_sum: %lf\n", global_sum);
 		}
-		else
-		{
-			printf("I am process: %d\n", myid);
-			printf("Out of: %d\n", nproc);
-			printVector2(length, vec);
-			// need to sum all the sums ffrom all processes
-			sum = sumVector(vec, length);
-		}
-		MPI_Reduce(&sum, &sumfinal, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-
+		// if(myid == 0)
+		// {
+		// 	double global_sum = sumVector(result, length);
+		// 	printf("the sum_ %lf\n", global_sum);
+		// }
 		// a barrier for master thread to wait for result
-		double error = difference(sum);
-		printf("The error for 2^k (k = %d) = %d,  elements is error = %lf\n", k,length, error);
-		t2 = WallTime();
-		dt = t2 - t1;
-		printf("The time elapsed for 2^k (k = %d) = %d elements: dt = %lf\n", k, length, dt);
+		// double error = difference(sum);
+		// printf("The error for 2^k (k = %d) = %d,  elements is error = %lf\n", k,length, error);
+		// t2 = WallTime();
+		// dt = t2 - t1;
+		// printf("The time elapsed for 2^k (k = %d) = %d elements: dt = %lf\n", k, length, dt);
 
 	}
-
+	//MPI_Barrier(MPI_COMM_WORLD);
 	MPI_Finalize();
 	return 0;
 }
