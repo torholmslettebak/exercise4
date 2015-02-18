@@ -20,6 +20,14 @@ Vector generateVector(int length)
 	return vec;
 }
 
+void fillVectorWithSeries(Vector vec)
+{
+	for (int i = 0; i < vec->len; i++)
+	{
+		vec -> data[i] = (1.0 / ((i + 1.0)*(i + 1.0)));
+	}
+}
+
 double sumVector(Vector vec, int length)
 {
 	double sum = 0;
@@ -87,7 +95,9 @@ int main(int argc, char **argv)
 		Vector recVec = createVector(elements_per_proc);
 		if (myid == 0) // If I am root, generate vector
 		{
-			vec = generateVector(length);
+			vec = createVector(length);
+			// vec = generateVector(length);
+			fillVectorWithSeries(vec);
 		}
 		MPI_Scatter(vec -> data, elements_per_proc, MPI_DOUBLE, recVec -> data, elements_per_proc, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 		
@@ -99,18 +109,21 @@ int main(int argc, char **argv)
 		{
 			global_sum = sumVector(result, nproc);
 			printf("The global_sum: %lf\n", global_sum);
-		}
-		if(myid == 0)
-		{
 			double error = (double) ((M_PI * M_PI / 6) - global_sum);
 			printf("The error for 2^k (k = %d)  	  = %d, elements is error = %lf\n", k,length, error);
-			t2 = WallTime();
-			dt = t2 - t1;
-			freeVector(vec);
-			printf("The time elapsed for 2^k (k = %d) = %d  elements: dt = %lf\n", k, length, dt);
+			// t2 = WallTime();
+			// dt = t2 - t1;
+			// freeVector(vec);
+			// printf("The time elapsed for 2^k (k = %d) = %d  elements: dt = %lf\n", k, length, dt);
 		}
+
 		freeVector(result);
 		freeVector(recVec);
+		MPI_Barrier(MPI_COMM_WORLD);
+		// freeVector(vec);
+		// printf("First element of vec: %lf\n", vec->data[0]);
+		// printVector2(vec->len, vec);
+		// printf("Vec of length %d\n", vec->len );
 	}
 
 	MPI_Barrier(MPI_COMM_WORLD);
