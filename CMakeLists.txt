@@ -42,18 +42,27 @@ endif()
 add_library(common common.c)
 add_executable(gensumserial genSumVec.c)
 target_link_libraries(gensumserial common)
+
 add_executable(sumvec_openmp sumvec_openmp.c)
 find_library(M_LIB m)
 target_link_libraries(sumvec_openmp ${M_LIB})
 target_link_libraries(sumvec_openmp common)
+
 add_executable(sumvec_MPI sumvec_MPI.c)
 target_link_libraries(sumvec_MPI ${MPI_C_LIBRARIES})
 target_link_libraries(sumvec_MPI common)
 target_link_libraries(sumvec_MPI ${M_LIB})
+
+add_executable(sumvec_comb sumvec_comb.c)
+target_link_libraries(sumvec_comb ${MPI_C_LIBRARIES})
+target_link_libraries(sumvec_comb common)
+target_link_libraries(sumvec_comb ${M_LIB})
+
 enable_testing()
 
-add_test(gensumserial ${PROJECT_BINARY_DIR}/gensumserial)
 
+add_test(gensumserial ${PROJECT_BINARY_DIR}/gensumserial)
 add_test(sumvec_openmp ${PROJECT_BINARY_DIR}/sumvec_openmp)
 add_test(sumvec_MPI ${PROJECT_BINARY_DIR}/sumvec_MPI)
+add_test(sumvec_comb ${PROJECT_BINARY_DIR}/sumvec_comb)
 set_tests_properties(sumvec_openmp PROPERTIES ENVIRONMENT OMP_NUM_THREADS=2)

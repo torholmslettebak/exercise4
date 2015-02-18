@@ -23,6 +23,7 @@ Vector generateVector(int length)
 double sumVector(Vector vec, int length)
 {
 	double sum = 0;
+	#pragma omp parallel for schedule(static) reduction(+:sum)
 	for (int i = 0; i < length; i++)
 	{
 		sum += vec -> data[i];	
