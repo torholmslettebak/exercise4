@@ -56,14 +56,9 @@ void printVector2(int length, Vector vec)
 }
 
 
-int isPowerOfTwo(int x)
+int isPowerOfTwo (unsigned int x) 
 {
-	if ((x%2 == 0) && x>1)
-	{
-		return 1;
-	}
-	else 
-		return 0;
+	return ((x != 0) && !(x & (x - 1))); 
 }
 
 int main(int argc, char **argv)

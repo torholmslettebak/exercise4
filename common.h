@@ -46,16 +46,16 @@ void freeVector(Vector vec);
 //! \brief Copy a vector: \f$y = x\f$
 //! \param y The y vector
 //! \param[in] x The x vector
-void copyVector(Vector y, const Vector x);
+//void copyVector(Vector y, const Vector x);
 
 //! \brief Fill a vector with a constant: \f$u(i) = \alpha\,\forall\,i\f$
 //! \param u The u vector
 //! \param[in] alpha The fill constant
-void fillVector(Vector u, double alpha);
+//void fillVector(Vector u, double alpha);
 
 //! \brief Print a vector to the terminal for inspection
 //! \param u The vector to print
-void printVector(const Vector u);
+//void printVector(const Vector u);
 
 //! \brief Get the maximum number of available threads
 //! \return Number of available threads
