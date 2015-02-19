@@ -114,8 +114,8 @@ int main(int argc, char **argv)
 			t2 = WallTime();
 			dt = t2 - t1;
 			printf("Number of elements: %d\t\t", length);
-			printf("time:   %0.10f\t", dt);
 			printf("sum:	%0.10f\t", global_sum);
+			printf("time:   %0.10f\t", dt);
 			printf("error:	%0.10f\n", error);
 		}
 
