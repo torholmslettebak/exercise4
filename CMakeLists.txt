@@ -41,6 +41,8 @@ endif()
 
 add_library(common common.c)
 add_executable(gensumserial genSumVec.c)
+find_library(M_LIB m)
+target_link_libraries(gensumserial ${M_LIB})
 target_link_libraries(gensumserial common)
 
 add_executable(sumvec_openmp sumvec_openmp.c)

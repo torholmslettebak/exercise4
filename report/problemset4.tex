@@ -17,13 +17,46 @@
 \usepackage{amsthm}                   % for å lage teoremer og lignende.
 \usepackage{graphicx}                 % inkludering av grafikk
 \usepackage{subfig}                   % hvis du vil kunne ha flere
+\usepackage{hyperref}
+\usepackage{xcolor}
+% \input{preamble/preamble.tex}
+% \input{preamble/preamble-addon-listings.tex}
+ 
+
                                       % figurer inni en figur
-\usepackage{listings}                 % Fin for inkludering av kildekode
+\usepackage{listingsutf8}                 % Fin for inkludering av kildekode
 
 %\usepackage{hyperref}                % Lager hyperlinker i evt. pdf-dokument
                                       % men har noen bugs, så den er kommentert
                                       % bort her.
-                                 
+
+\usepackage{color}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstdefinestyle{customc}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  frame=L,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{orange},
+}    
+\lstdefinestyle{customasm}{
+  belowcaptionskip=1\baselineskip,
+  frame=L,
+  xleftmargin=\parindent,
+  language=[x86masm]Assembler,
+  basicstyle=\footnotesize\ttfamily,
+  commentstyle=\itshape\color{purple!40!black},
+}
+\lstset{escapechar=@,style=customc}                           
 % Indeksgenerering er kommentert ut her. Ta bort prosenttegnene
 % hvis du vil ha en indeks:
 %\usepackage{makeidx}     
@@ -35,8 +68,8 @@
 
 % På forsida skal vi ikke ha noen sidenummerering:
 
-\pagestyle{empty}
-\pagenumbering{roman}
+% \pagestyle{empty}
+% \pagenumbering{roman}
 
 % Inkluder forsida:
 \input{forside}
@@ -45,17 +78,17 @@
 \pagenumbering{roman}
 
 % For å ikke begynne innholdslista på baksida av forsida:
-\cleardoublepage
+%\cleardoublepage
 % (kun aktuelt når man har twoside som global opsjon)
 
 % Nå vi vil ha noe i topp- og bunnteksten
 \pagestyle{headings}
 
 % Si til LaTeX at vi vil ha ei innholdsliste generert akkurat her:
-\tableofcontents
+%\tableofcontents
 
 % Pass på at neste side ikke begynner på baksida av en annen side.
-\cleardoublepage
+%\cleardoublepage
 
 % Arabisk (vanlige tall) sidenummerering. Starter på side 1 igjen.
 \pagenumbering{arabic}
@@ -65,21 +98,21 @@
 % NB: Vi trenger ikke ta med filendelsen .tex her. Den vet
 %     LaTeX om selv!
 
-\input{innledning}
+\input{textfile}
 
-\input{bakgrunn}
+% \input{bakgrunn}
 
-\input{resultater}
+% \input{resultater}
 
 % Bibliografi/referanseliste skal komme før appendiks
-\bibliography{kurs}
+%\bibliography{kurs}
 \bibliographystyle{plain}
 
 % En latex-kommando for å si fra at kapitlene/seksjonene fra nå 
 % av skal nummereres med store bokstaver:
 \appendix
 
-\input{appendiks}
+% \input{appendiks}
 
 % Indeks for rapporten. Ta bort prosenttegn hvis du vil ha det med.
 %\printindex

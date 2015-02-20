@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 			double error = (double) ((M_PI * M_PI / 6) - global_sum);
 			t2 = WallTime();
 			dt = t2 - t1;
-			printf("Number of elements: %d\t\t", length);
+			printf("Number of elements: \t%d\t", length);
 			printf("sum:	%0.10f\t", global_sum);
 			printf("time:   %0.10f\t", dt);
 			printf("error:	%0.10f\n", error);

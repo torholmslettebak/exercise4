@@ -36,14 +36,22 @@ double sumVector(Vector vec)
 int main(void)
 {
 	double sum, t1,t2;
-	int length = pow(2, 14);
-	Vector vec = generateVector(length);
-	t1 = WallTime();
-	sum = sumVector(vec);
-	t2 = WallTime();
-	//printVector2(length, vec);
-	printf("The sum: %.13lf calculated in: , with serial computation. %lf\n", sum, t2-t1);
-	printf("The sum as number of elements -> inf: %.13lf\n", M_PI * M_PI/6);
+	for (int i = 3; i < 15; i++)
+	{
+		t1 = WallTime();
+		int length = pow(2, i);
+		Vector vec = generateVector(length);
+		sum = sumVector(vec);
+		t2 = WallTime();
+		double dt = t2 - t1;
+		double error = (double) ((M_PI * M_PI / 6) - sum);
+		printf("Number of elements: \t%d\t", length);
+		printf("sum:	%0.10f\t", sum);
+		printf("time:   %0.10f\t", dt);
+		printf("error:	%0.10f\n", error);
+	}
+	// printf("The sum: %.13lf calculated in: , with serial computation. %lf\n", sum, t2-t1);
+	// printf("The sum as number of elements -> inf: %.13lf\n", M_PI * M_PI/6);
 	return 0;
 }
 //1.6448340718481

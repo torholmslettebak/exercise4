@@ -37,7 +37,6 @@ double sumVector(Vector vec)
 	#pragma omp parallel for schedule(static) reduction(+:sum)
 	for (unsigned int i = 0; i < vec -> len; i++)
 	{
-		// printf("Hai, i'm thread number %d and I am working on i %d\n", omp_get_thread_num(), i);
 		sum += vec -> data[i];
 	}
 	return sum;
