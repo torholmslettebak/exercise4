@@ -58,8 +58,6 @@ int main(int argc, char **argv)
 	int length, myid, nproc, tag1, tag2, tag3;
 	Vector vec;
 	MPI_Status status;
-	
-	//test();
 	// From this point on every process executes a seperate copy of the program
 	MPI_Init (&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &nproc);
@@ -109,6 +107,7 @@ int main(int argc, char **argv)
 
 			/*sum own elements*/
 			double localSum = sumVector(vec, 0, elements_per_proc);
+			freeVector(vec);
 			global_sum = global_sum + localSum;
 			double error = (double) ((M_PI * M_PI / 6) - global_sum);
 			t2 = WallTime();
@@ -130,9 +129,10 @@ int main(int argc, char **argv)
 			/* Computes the sum for each subvector*/
 			double localSum = sumVector(vec, localIndex, localIndex + elements_per_proc);
 			/* Returns the computed local sum to master process*/
+			freeVector(vec);
 			MPI_Send(&localSum, 1, MPI_DOUBLE, 0, tag2, MPI_COMM_WORLD);
 		}
-		freeVector(vec);
+		
 	}
 
 	MPI_Finalize();

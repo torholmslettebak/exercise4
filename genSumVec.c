@@ -50,10 +50,7 @@ int main(void)
 		printf("time:   %0.10f\t", dt);
 		printf("error:	%0.10f\n", error);
 	}
-	// printf("The sum: %.13lf calculated in: , with serial computation. %lf\n", sum, t2-t1);
-	// printf("The sum as number of elements -> inf: %.13lf\n", M_PI * M_PI/6);
+
 	return 0;
 }
-//1.6448340718481
-//1.6449340668482
 

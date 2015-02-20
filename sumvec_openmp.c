@@ -46,19 +46,22 @@ int main(void)
 {
 	double sum, t1, t2, dt;
 	double actualSum = M_PI*M_PI/6;
-	t1 = WallTime();
-	for (int k = 3; k < 14; k++)
+
+	for (int k = 3; k < 15; k++)
 	{
+		t1 = WallTime();
 		int length = pow(2.0, 1.0*k);
 		Vector vec = generateVector(length);
 		sum = sumVector(vec);
-		printf("The computed sum for sum: %.13lf\n", sum);
-		printf("The sum as number of elements goes -> inf: %.13lf\n", actualSum);
-		printf("The difference S - Sn for n = 2^k for k = %d,  error = %.14lf\n", k, actualSum - sum);		
+		double error = (double) ((M_PI * M_PI / 6) - sum);
+		t2 = WallTime();
+		dt = t2 - t1;
+		printf("Number of elements: \t%d\t", length);
+		printf("sum:	%0.10f\t", sum);
+		printf("time:   %0.10f\t", dt);
+		printf("error:	%0.10f\n", error);		
 	}
-	t2 = WallTime();
-	//printVector2(length, vec);
-	printf("Time elapsed summing vectors: %lf \n", t2-t1);
+
 	return 0;
 }
 //1.6448340718481
